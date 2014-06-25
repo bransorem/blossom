@@ -24,7 +24,10 @@
     "node": ">= 0.10.23"
   },
   "scripts": {
-    "test": "grunt test:sauce:parallel"
+    "test": "grunt test:sauce:chrome",
+    "test-all": "grunt test:sauce:parallel",
+    "test-ie": "grunt test:sauce:explorer",
+    "test-ff": "grunt test:sauce:firefox"
   },
   "devDependencies": {
     "grunt-env": "latest",

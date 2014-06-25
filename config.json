@@ -1,0 +1,5 @@
+{
+    "baseUrl": "http://www.sugarcrm.com",
+    "domain": "ondemand.saucelabs.com",
+    "mktoForm": "form#mktoForm_"
+}

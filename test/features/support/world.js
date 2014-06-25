@@ -1,12 +1,12 @@
+require('colors');
 var util = require('util');
 var wd = require('wd');
-require('colors');
 var _ = require("lodash");
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
+var config = require("../../../config.json");
 
 var World = function World(callback) {
-    // this.baseUrl = 'http://www.sugarcrm.com';
     chai.use(chaiAsPromised);
     chai.should();
     chaiAsPromised.transferPromiseness = wd.transferPromiseness;
@@ -14,7 +14,8 @@ var World = function World(callback) {
     // checking sauce credential
     if(!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY){
         console.warn(
-            '\nPlease configure your sauce credential:\n\n' +
+            '\nFind credentials at: https://docs.saucelabs.com/tutorials/node-js/\n\n' +
+            'Please configure your sauce credential:\n\n' +
             'export SAUCE_USERNAME=<SAUCE_USERNAME>\n' +
             'export SAUCE_ACCESS_KEY=<SAUCE_ACCESS_KEY>\n\n'
         );
@@ -35,9 +36,11 @@ var World = function World(callback) {
     this.chai = chai;
     this.wd = wd;
     this.desired = desired;
-    this.baseUrl = "http://www.sugarcrm.com";
+    this.baseUrl = config.baseUrl;
+    this.passed = true;
+    this.mktoForm = config.mktoForm;
 
-    var domain = "ondemand.saucelabs.com";
+    var domain = config.domain;
     var username = process.env.SAUCE_USERNAME;
     var accessKey = process.env.SAUCE_ACCESS_KEY;
     var browser = this.browser = wd.promiseChainRemote(domain, 80, username, accessKey);
@@ -51,8 +54,6 @@ var World = function World(callback) {
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });            
     }
-
-    // browser.init(desired);
 
     var world = this;
     callback(world);

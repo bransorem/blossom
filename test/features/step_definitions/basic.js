@@ -2,7 +2,6 @@ var assert = require('assert');
 var fs = require('fs');
 
 module.exports = function () {
-    var mktoForm = "form#mktoForm_";  // this is the mandated naming convention
     this.World = require('../support/world.js').World;
 
     // path to visit is set (but we still need to add the parameters to check)
@@ -33,42 +32,87 @@ module.exports = function () {
             }
         }
 
-        this.fullPath = full;
-
         browser
-            .init(this.desired)
             .get(full)
             .nodeify(callback);
     });
 
+    this.Given('I go to "$path"', function(path, callback){
+        this.browser
+            .get(this.baseUrl + path)
+            .nodeify(callback);
+    });
+
     // form fill
-    this.Then('I fill out form "$id"', function (id, callback) {
-        var form = mktoForm + id;
-        var d = (new Date).getTime();   // timestamp for test
+    this.When('I fill out form "$id"', function (id, callback) {
+        var mktoForm = this.mktoForm;
+        var regex = /^\d+/;
+        var form;
+        if (regex.exec(id)){
+            form = this.form = mktoForm + id;
+        }
+        else {
+            form = this.form = id;
+        }
+        this.timestamp = (new Date).getTime();   // timestamp for test
         var browser = this.browser;
 
         browser
-            .waitForElementByCss(form + " #Email", 5000)    // wait for the form to load
-            .elementByCss(form + ' #Email').type('test_' + d + '@sugarcrm.com')
-            .elementByCss(form + ' #FirstName').type('Test')
-            .elementByCss(form + ' #LastName').type('Test_' + d)
-            .elementByCss(form + ' #Company').type('SugarCRM')
-            .elementByCss(form + ' #NumberOfEmployees').click()
-            .elementByCss(form + ' #NumberOfEmployees option[value="level1"]').click()
-            .elementByCss(form + ' #Phone').type('555-555-5555')
-            .elementByCss(form + ' #Country').type('USA')
-            .elementByCss(form + ' .mktoButton').click()
+            .waitForElementByCss(form + " div", 5000)    // wait for the form to load
+            .nodeify(callback);
+    });
+
+    this.Given('I fill field "$field" as "$value" with timestamp', function(field, value, callback){
+        var form = this.form;
+
+        if (field.toLowerCase().indexOf('email') >= 0){
+            var email = value.split('@');
+            value = email[0] + '_' + this.timestamp + '@' + email[1];
+        }
+        else {
+            value = value + this.timestamp;
+        }
+        this.browser
+            .elementByCss(form + ' ' + field).type(value)
+            .nodeify(callback);
+    });
+
+    this.Given('I fill field "$field" as "$value"', function(field, value, callback){
+        var form = this.form;
+        this.browser
+            .elementByCss(form + ' ' + field).type(value)
+            .nodeify(callback);
+    });
+
+    this.Given('I select field "$field" as "$value"', function(field, value, callback){
+        var form = this.form;
+        this.browser
+            .elementByCss(form + ' ' + field).click()
+            .elementByCss(form + ' ' + field + ' option[value="' + value + '"]').click()
+            .nodeify(callback);
+    });
+
+    this.Given('I click "$selector"', function(selector, callback){
+        this.browser
+            .elementByCss(selector)
+            .click()
+            .nodeify(callback);
+    });
+
+    this.Then('I click submit', function(callback){
+        var form = this.form;
+        this.browser
+            .elementByCss(form + ' [type="submit"]')
+            .click()
             .nodeify(callback);
     });
 
     // end on thank you page
     this.Then('I\'m taken to "$path"', function (path, callback) {
-        var browser = this.browser;
-        browser
-            .elementByCss('h1')
-            .text().should.become('Thanks for filling out the form!')
-            .quit()
-            .sauceJobStatus(true)
+        this.browser
+            .setAsyncScriptTimeout(10000);
+        this.browser
+            .waitForCondition('window.location.href.indexOf(\'' + path + '\') > 0', 2000)
             .nodeify(callback);
     });
 };
