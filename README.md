@@ -23,9 +23,9 @@ Tests exist in the form of .feature files. *All* of the .feature files that exis
 
 To run the test, type one of the following commands:
 
-`npm test` for testing Chrome
-`npm test-ie` for testing Internet Explorer
-`npm test-ff` for testing Firefox
+`grunt test:sauce:chrome` for testing Chrome
+`grunt test:sauce:ie` for testing Internet Explorer
+`grunt test:sauce:ff` for testing Firefox
 
 ### Run Tests on all browsers
 

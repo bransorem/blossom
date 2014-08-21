@@ -29,8 +29,9 @@ var World = function World(callback) {
         retries: 5
     });
 
-    var desired = JSON.parse(process.env.DESIRED || '{browserName: "chrome"}');
-    desired.name = 'example with ' + desired.browserName;
+    // https://saucelabs.com/platforms
+    var desired = JSON.parse(process.env.DESIRED || '{browserName: "chrome", platform: "OS X 10.9"}');
+    desired.name = 'Marketo form test using: ' + desired.browserName;
     desired.tags = ['marketo', 'form'];
 
     this.chai = chai;

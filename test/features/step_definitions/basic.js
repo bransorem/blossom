@@ -23,12 +23,14 @@ module.exports = function () {
         
         // set the path parameters
         var full = this.fullPath;
-        if (this.params.length > 0){
-            var para = this.params[0];
-            full = full + '?' + para.p + '=' + para.v;
-            for (var i = 1; i < this.params.length; i++){
-                para = this.params[i];
-                full = full + '&' + para.p + '=' + para.v;
+        if (this.hasOwnProperty('params')){
+            if (this.params.length > 0){
+                var para = this.params[0];
+                full = full + '?' + para.p + '=' + para.v;
+                for (var i = 1; i < this.params.length; i++){
+                    para = this.params[i];
+                    full = full + '&' + para.p + '=' + para.v;
+                }
             }
         }
 
@@ -79,16 +81,18 @@ module.exports = function () {
 
     this.Given('I fill field "$field" as "$value"', function(field, value, callback){
         var form = this.form;
+        var selector = form + ' ' + field;
         this.browser
-            .elementByCss(form + ' ' + field).type(value)
+            .elementByCss(selector).type(value)
             .nodeify(callback);
     });
 
     this.Given('I select field "$field" as "$value"', function(field, value, callback){
         var form = this.form;
+        var selector = form + ' ' + field;
         this.browser
-            .elementByCss(form + ' ' + field).click()
-            .elementByCss(form + ' ' + field + ' option[value="' + value + '"]').click()
+            .elementByCss(selector).click()
+            .elementByCss(selector + ' option[value="' + value + '"]').click()
             .nodeify(callback);
     });
 
@@ -112,7 +116,7 @@ module.exports = function () {
         this.browser
             .setAsyncScriptTimeout(10000);
         this.browser
-            .waitForCondition('window.location.href.indexOf(\'' + path + '\') > 0', 2000)
+            .waitForCondition('window.location.href.indexOf(\'' + path + '\') > 0', 10000)
             .nodeify(callback);
     });
 };
