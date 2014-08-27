@@ -69,7 +69,7 @@ module.exports = function () {
 
         if (field.toLowerCase().indexOf('email') >= 0){
             var email = value.split('@');
-            value = email[0] + '_' + this.timestamp + '@' + email[1];
+            value = email[0] + '+' + this.timestamp + '@' + email[1];
         }
         else {
             value = value + this.timestamp;

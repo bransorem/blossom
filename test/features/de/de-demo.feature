@@ -1,12 +1,12 @@
-Feature: Global
+Feature: Demo
     Test German demo form
-    at /marketo/form/german-demo
+    at /de/demo/das-ist-neu-sugar
 
-    Scenario: Test German demo form
-        Given I visit "/marketo/form/german-demo"
-          And the parameter "utm_source" is "sugar"
-          And the parameter "utm_medium" is "email"
-          And the parameter "utm_campaign" is "DE_TEST_789"
+    Scenario: Test German global form
+        Given I visit "/de/demo/das-ist-neu-sugar"
+          And the parameter "utm_source" is "google"
+          And the parameter "utm_medium" is "sitelink"
+          And the parameter "utm_campaign" is "POST_rollout_sunday_funday"
           And the page loads
          When I fill out form "130"
           And I fill field "#FirstName" as "Test"
@@ -15,7 +15,7 @@ Feature: Global
           And I fill field "#Title" as "VP of Testing"
           And I fill field "#Company" as "SugarCRM"
           And I fill field "#Phone" as "555-555-5555"
-          And I select field "#num_of_employees" as "level3"
-          And I select field "#Industry" as "Engineering"
+          And I select field "#num_of_employees" as "level2"
+          And I select field "#Industry" as "Real Estate"
           And I click submit
-         Then I'm taken to "/marketo/thanks"
+         Then I'm taken to "/de/demo/das-ist-neu-sugar-thanks"

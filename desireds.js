@@ -1,7 +1,7 @@
 'use strict';
 
-var platform = "OS X 10.9";
-// var platform = "Windows 8.1";
+// var platform = "OS X 10.9";
+var platform = "Windows 8.1";
 // var platform = "Windows 7";
 
 module.exports = {
